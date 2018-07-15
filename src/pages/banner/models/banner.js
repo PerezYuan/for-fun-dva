@@ -28,36 +28,6 @@ export default {
         });
       }
     },
-    *remove({ payload: id }, { call, put }) {
-      const { code, msg} = yield call(bannerService.remove, id);
-      if (code === 200) {
-        Modal.success({
-          title: '成功',
-          content: '操作成功',
-        });
-        yield put({ type: 'reload' });
-      } else {
-        Modal.error({
-          title: '错误',
-          content: msg,
-        });
-      }
-    },
-    *create({ payload: values }, { call, put }) {
-      const { code, msg} = yield call(bannerService.create, values);
-      if (code === 200) {
-        Modal.success({
-          title: '成功',
-          content: '操作成功',
-        });
-        yield put({ type: 'reload' });
-      } else {
-        Modal.error({
-          title: '错误',
-          content: msg,
-        });
-      }
-    },
     *edit({ payload: { id, values } }, { call, put }) {
       const { code, msg} = yield call(bannerService.edit, id, values);
       if (code === 200) {
@@ -74,8 +44,7 @@ export default {
       }
     },
     *reload(action, { put, select }) {
-      const page = yield select(state => state.page);
-      yield put({ type: 'fetch', payload: { page } });
+      yield put({ type: 'fetch' });
     },
   },
   subscriptions: {

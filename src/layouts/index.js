@@ -41,6 +41,11 @@ const menu = [
         icon: 'inbox',
         url: '/service',
       },
+      {
+        name: '页面元素配置',
+        icon: 'picture',
+        url: '/banner',
+      },
     ]
   }
 ]

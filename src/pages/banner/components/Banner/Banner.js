@@ -52,9 +52,14 @@ class FormUpload extends React.Component {
   }
 
   handleSubmit = () => {
+    const { id, dispatch } = this.props
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        console.log(values)
+        values.url = this.state.imageUrl;
+        dispatch({
+          type: 'banner/edit',
+          payload: { id, values },
+        })
       }
     });
   }
