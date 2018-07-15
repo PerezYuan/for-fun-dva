@@ -24,13 +24,15 @@ class Shops extends React.Component {
   }
 
   render() {
+    let { list } = this.props
+    if (!list) { list = [] } 
     return (
       <div>
         <div style={{ marginBottom: 16 }}>
           <Button onClick={this.add}>ADD</Button>
         </div>
         <Tabs onChange={this.callback} type="card">
-          {this.props.list.map(item => <TabPane tab={item.name} key={item.id}>
+          {list.map(item => <TabPane tab={item.name} key={item.id}>
             <ShopForm
               id={item.id}
               info={item.info || {}}

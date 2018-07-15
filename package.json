@@ -9,8 +9,12 @@
     "precommit": "npm run lint"
   },
   "dependencies": {
+    "connect-multiparty": "^2.1.1",
+    "cors": "^2.8.4",
+    "lodash": "^4.17.10",
     "umi": "^1.0.0-0",
-    "umi-plugin-dva": "^0.1.0"
+    "umi-plugin-dva": "^0.1.0",
+    "urijs": "^1.19.1"
   },
   "devDependencies": {
     "eslint": "^4.17.0",

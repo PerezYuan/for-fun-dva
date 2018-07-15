@@ -36,7 +36,7 @@ if (module.hot) {
   });
 }
 
-require('E:/for_fun_dva/src/global.css');
+require('/Users/perezyuan/workspace/for-fun-dva/src/global.css');
 // Enable service worker
 if (process.env.NODE_ENV === 'production') {
   require('./registerServiceWorker');

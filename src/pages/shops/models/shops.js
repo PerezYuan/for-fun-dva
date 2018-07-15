@@ -8,17 +8,18 @@ export default {
     page: null,
   },
   reducers: {
-    save(state, { payload: { data: list } }) {
+    save(state, { payload: { list } }) {
       return { ...state, list };
     },
   },
   effects: {
     *list(action, { call, put }) {
-      const { data } = yield call(shopsService.list);
+      const { list } = yield call(shopsService.list);
+      console.log(list)
       yield put({
         type: 'save',
         payload: {
-          data,
+          list,
         },
       });
     },
@@ -29,7 +30,7 @@ export default {
       yield put({
         type: 'save',
         payload: {
-          data: [...list],
+          list: [...list],
         },
       });
     },

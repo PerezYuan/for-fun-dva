@@ -1,13 +1,11 @@
 import React from 'react';
 import {
-  Form, Select, InputNumber, Switch, Radio, Input,
-  Slider, Button, Upload, Icon, Rate
+  Form, Select, InputNumber, Switch, Input,
+  Button, Upload, Icon,
 } from 'antd';
 
 const FormItem = Form.Item;
 const Option = Select.Option;
-const RadioButton = Radio.Button;
-const RadioGroup = Radio.Group;
 
 const { TextArea } = Input
 
@@ -39,6 +37,15 @@ class FormList extends React.Component {
 
   render() {
     const { getFieldDecorator } = this.props.form;
+    // console.log(this.props.info)
+    const {
+      is_open,
+      name,
+      location,
+      longitude,
+      latitude,
+      description
+    } = this.props.info
     const formItemLayout = {
       labelCol: { span: 6 },
       wrapperCol: { span: 14 },
@@ -49,7 +56,10 @@ class FormList extends React.Component {
           {...formItemLayout}
           label="是否经营"
         >
-          {getFieldDecorator('is_open', { valuePropName: 'checked' })(
+          {getFieldDecorator('is_open', {
+            initialValue: parseInt(is_open, 10) === 1,
+            valuePropName: 'checked'
+          })(
             <Switch />
           )}
         </FormItem>
@@ -58,35 +68,58 @@ class FormList extends React.Component {
           label="门店名称"
         >
           {getFieldDecorator('name', {
-            rules: [{ required: true, message: 'name is required!' }],
+            initialValue: name, 
+            rules: [{ required: true, message: '请填写门店名称' }],
           })(<Input />)}
         </FormItem>
         <FormItem
           {...formItemLayout}
           label="门店位置"
         >
-          {getFieldDecorator('location')(<TextArea autosize={{ minRows: 2, maxRows: 6 }} />)}
+          {getFieldDecorator('location', {
+            initialValue: location
+          })(<TextArea autosize={{ minRows: 2, maxRows: 6 }} />)}
         </FormItem>
         <FormItem
           {...formItemLayout}
-          label="Select"
-          hasFeedback
+          label="经度"
         >
-          {getFieldDecorator('select', {
-            rules: [
-              { required: true, message: 'Please select your country!' },
-            ],
-          })(
-            <Select placeholder="Please select a country">
-              <Option value="china">China</Option>
-              <Option value="use">U.S.A</Option>
-            </Select>
+          {getFieldDecorator('longitude', {
+            initialValue: longitude,
+            rules: [{ required: true, message: '请填写经度信息' }],
+          })(<Input />)}
+        </FormItem>
+        <FormItem
+          {...formItemLayout}
+          label="纬度"
+        >
+          {getFieldDecorator('latitude', {
+            initialValue: latitude,
+            rules: [{ required: true, message: '请填写纬度信息' }],
+          })(<Input />)}
+          <span className="ant-form-text">请根据腾讯地图具体值填写</span>
+        </FormItem>
+        <FormItem
+          {...formItemLayout}
+          label="门店信息"
+        >
+          {getFieldDecorator('description', {
+            initialValue: description
+          })(<TextArea autosize={{ minRows: 2, maxRows: 6 }} />)}
+        </FormItem>
+      
+        <FormItem
+          {...formItemLayout}
+          label="可用工位"
+        >
+          {getFieldDecorator('input-number', { initialValue: 3 })(
+            <InputNumber min={1} max={10} />
           )}
         </FormItem>
 
         <FormItem
           {...formItemLayout}
-          label="Select[multiple]"
+          label="项目信息"
         >
           {getFieldDecorator('select-multiple', {
             rules: [
@@ -101,62 +134,7 @@ class FormList extends React.Component {
           )}
         </FormItem>
 
-        <FormItem
-          {...formItemLayout}
-          label="InputNumber"
-        >
-          {getFieldDecorator('input-number', { initialValue: 3 })(
-            <InputNumber min={1} max={10} />
-          )}
-          <span className="ant-form-text"> machines</span>
-        </FormItem>
-
-        <FormItem
-          {...formItemLayout}
-          label="Slider"
-        >
-          {getFieldDecorator('slider')(
-            <Slider marks={{ 0: 'A', 20: 'B', 40: 'C', 60: 'D', 80: 'E', 100: 'F' }} />
-          )}
-        </FormItem>
-
-        <FormItem
-          {...formItemLayout}
-          label="Radio.Group"
-        >
-          {getFieldDecorator('radio-group')(
-            <RadioGroup>
-              <Radio value="a">item 1</Radio>
-              <Radio value="b">item 2</Radio>
-              <Radio value="c">item 3</Radio>
-            </RadioGroup>
-          )}
-        </FormItem>
-
-        <FormItem
-          {...formItemLayout}
-          label="Radio.Button"
-        >
-          {getFieldDecorator('radio-button')(
-            <RadioGroup>
-              <RadioButton value="a">item 1</RadioButton>
-              <RadioButton value="b">item 2</RadioButton>
-              <RadioButton value="c">item 3</RadioButton>
-            </RadioGroup>
-          )}
-        </FormItem>
-
-        <FormItem
-          {...formItemLayout}
-          label="Rate"
-        >
-          {getFieldDecorator('rate', {
-            initialValue: 3.5,
-          })(
-            <Rate />
-          )}
-        </FormItem>
-
+        
         <FormItem
           {...formItemLayout}
           label="Upload"
@@ -204,25 +182,26 @@ class FormList extends React.Component {
   }
 }
 
-const ShopForm = Form.create({
-  mapPropsToFields: (props) => {
-    const { info } = props
-    console.log(info)
-    return {
-      is_open: Form.createFormField({
-        value: parseInt(info.is_open, 10) === 1
-      }),
-      name: Form.createFormField({
-        value: info.name
-      }),
-      location: Form.createFormField({
-        value: info.location
-      }),
-    };
-  },
-  onValuesChange: (props, change) => {
-    console.log(props, change)
-  }
-})(FormList);
+const ShopForm = Form.create(
+  // {
+  //   mapPropsToFields: (props) => {
+  //     const { info } = props
+  //     return {
+  //       is_open: Form.createFormField({
+  //         value: parseInt(info.is_open, 10) === 1
+  //       }),
+  //       name: Form.createFormField({
+  //         value: info.name
+  //       }),
+  //       location: Form.createFormField({
+  //         value: info.location
+  //       }),
+  //     };
+  //   },
+  //   onValuesChange: (props, change) => {
+  //     console.log(props, change)
+  //   }
+  // }
+)(FormList);
 
 export default ShopForm

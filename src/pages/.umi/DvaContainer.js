@@ -8,7 +8,10 @@ const app = dva({
 window.g_app = app;
 app.use(createLoading());
 app.use(require('../../plugins/onError.js').default);
+app.model({ ...(require('../../pages/banner/models/banner.js').default) });
+app.model({ ...(require('../../pages/service/models/service.js').default) });
 app.model({ ...(require('../../pages/shops/models/shops.js').default) });
+app.model({ ...(require('../../pages/users/models/shoplist.js').default) });
 app.model({ ...(require('../../pages/users/models/users.js').default) });
 
 class DvaContainer extends Component {

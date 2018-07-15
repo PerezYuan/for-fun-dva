@@ -2,15 +2,14 @@ import React from 'react';
 import { connect } from 'dva';
 import { Table, Pagination, Popconfirm, Button } from 'antd';
 import { routerRedux } from 'dva/router';
-import styles from './Users.css';
-import { PAGE_SIZE } from '../../../../constants';
-import UserModal from './UserModal';
+import styles from './Service.css';
+import ServiceModal from './ServiceModal';
 
-function Users(data) {
+function Service(data) {
   const { dispatch, list: dataSource, loading, total, page: current, shoplist } = data
   function deleteHandler(id) {
     dispatch({
-      type: 'users/remove',
+      type: 'service/remove',
       payload: id,
     });
   }
@@ -18,7 +17,7 @@ function Users(data) {
   function pageChangeHandler(page) {
     dispatch(
       routerRedux.push({
-        pathname: '/users',
+        pathname: '/service',
         query: { page },
       })
     );
@@ -26,103 +25,89 @@ function Users(data) {
 
   function editHandler(id, values) {
     dispatch({
-      type: 'users/patch',
+      type: 'service/edit',
       payload: { id, values },
     });
   }
 
   function createHandler(values) {
     dispatch({
-      type: 'users/create',
+      type: 'service/create',
       payload: values,
-    });
-  }
-
-  function getShopList() {
-    dispatch({
-      type: 'shoplist/fetch'
     });
   }
 
   const columns = [
     {
-      title: '工号',
-      dataIndex: 'number',
-      key: 'number',
+      title: '序号',
+      dataIndex: 'index',
+      key: 'index',
     },
     {
-      title: '姓名',
+      title: '项目名',
       dataIndex: 'name',
       key: 'name',
       render: text => <a href="">{text}</a>,
     },
     {
-      title: '性别',
-      dataIndex: 'sex',
-      key: 'sex',
-      render: text => parseInt(text, 10) === 0 ? '女' : '男',
+      title: '项目描述',
+      dataIndex: 'description',
+      key: 'description',
     },
     {
-      title: '入职时间',
+      title: '定价',
+      dataIndex: 'price',
+      key: 'price',
+    },
+    {
+      title: '保底计价',
+      dataIndex: 'base_price',
+      key: 'base_price',
+    },
+    {
+      title: '创建时间',
       dataIndex: 'create_time',
       key: 'create_time',
     },
     {
-      title: '所属门店',
-      dataIndex: 'shop',
-      key: 'shop',
+      title: '更新时间',
+      dataIndex: 'update_time',
+      key: 'update_time',
     },
     {
-      title: '岗位',
-      dataIndex: 'title',
-      key: 'title',
-    },
-    {
-      title: '微信号',
-      dataIndex: 'wx_number',
-      key: 'wx_number',
-    },
-    {
-      title: '工作情况',
-      dataIndex: 'info',
-      key: 'info',
-    },
-    {
-      title: 'Operation',
+      title: '操作',
       key: 'operation',
       render: (text, record) => (
         <span className={styles.operation}>
-          <UserModal
+          <ServiceModal
             record={record}
             onOk={editHandler.bind(null, record.id)}
-            getShopList={getShopList}
             shoplist={shoplist}
           >
             <a>编辑</a>
-          </UserModal>
+          </ServiceModal>
           <Popconfirm
-            title="Confirm to delete?"
+            title="确定删除此项目？"
             onConfirm={deleteHandler.bind(null, record.id)}
           >
-            <a href="">Delete</a>
+            <a href="">删除</a>
           </Popconfirm>
         </span>
       ),
     },
   ];
-
+  dataSource.map((item, index) => item.index = index + 1)
   return (
     <div className={styles.normal}>
       <div>
         <div className={styles.create}>
-          <UserModal
+          <ServiceModal
             record={{}}
             onOk={createHandler}
-            getShopList={getShopList}
             shoplist={shoplist}
           >
-            <Button type="primary">Create User</Button>
-          </UserModal>
+            <Button type="primary">新增项目</Button>
+          </ServiceModal>
         </div>
         <Table
           columns={columns}
@@ -135,7 +120,7 @@ function Users(data) {
           className="ant-table-pagination"
           total={total}
           current={current}
-          pageSize={PAGE_SIZE}
+          pageSize={10}
           onChange={pageChangeHandler}
         />
       </div>
@@ -144,15 +129,13 @@ function Users(data) {
 }
 
 function mapStateToProps(state) {
-  const { list, total, page } = state.users;
-  const { shoplist } = state.shoplist
+  const { list, total, page } = state.service;
   return {
-    loading: state.loading.models.users,
+    loading: state.loading.models.service,
     list,
-    shoplist,
     total,
     page,
   };
 }
 
-export default connect(mapStateToProps)(Users);
+export default connect(mapStateToProps)(Service);
