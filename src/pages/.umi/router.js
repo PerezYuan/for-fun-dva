@@ -41,7 +41,7 @@ let routes = [
         "component": require('../users/page.js').default
       },
       {
-        "component": () => React.createElement(require('/Users/perezyuan/workspace/for-fun-dva/node_modules/_umi-build-dev@0.20.7@umi-build-dev/lib/plugins/404/NotFound.js').default, { pagesPath: 'src/pages', routes: '[{"path":"/","component":"./src/layouts/index.js","routes":[{"path":"/banner","exact":true,"component":"./src/pages/banner/page.js"},{"path":"/","exact":true,"component":"./src/pages/index.js"},{"path":"/service","exact":true,"component":"./src/pages/service/page.js"},{"path":"/shops","exact":true,"component":"./src/pages/shops/page.js"},{"path":"/users","exact":true,"component":"./src/pages/users/page.js"}]}]' })
+        "component": () => React.createElement(require('E:/for-fun-dva/node_modules/_umi-build-dev@0.21.1@umi-build-dev/lib/plugins/404/NotFound.js').default, { pagesPath: 'src/pages', routes: '[{"path":"/","component":"./src\\\\layouts\\\\index.js","routes":[{"path":"/banner","exact":true,"component":"./src/pages/banner/page.js"},{"path":"/","exact":true,"component":"./src/pages/index.js"},{"path":"/service","exact":true,"component":"./src/pages/service/page.js"},{"path":"/shops","exact":true,"component":"./src/pages/shops/page.js"},{"path":"/users","exact":true,"component":"./src/pages/users/page.js"}]}]' })
       }
     ]
   }

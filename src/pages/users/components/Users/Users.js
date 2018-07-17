@@ -75,13 +75,25 @@ function Users(data) {
       title: '所属门店',
       dataIndex: 'shop',
       key: 'shop',
-      render: id => shoplist.filter(item => item.id === id)[0].name
+      render: id => {
+        const filterItem = shoplist.filter(item => item.id === id)[0]
+        if (filterItem) {
+          return filterItem.name
+        }
+        return ''
+      }
     },
     {
       title: '岗位',
       dataIndex: 'title',
       key: 'title',
-      render: id => titlelist.filter(item => item.id === id)[0].name
+      render: id => {
+        const filterItem = titlelist.filter(item => item.id === id)[0]
+        if (filterItem) {
+          return filterItem.name
+        }
+        return ''
+      }
     },
     {
       title: '微信号',

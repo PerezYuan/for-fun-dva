@@ -55,8 +55,8 @@ export default {
       const { code, msg } = yield call(shopsService.update, id, values);
       if (code === 200) {
         message.success('操作成功')
-        yield put({ type: 'reload' });
-        yield put({ type: 'get', payload: id });
+        // yield put({ type: 'list' });
+        // yield put({ type: 'get', payload: id });
       } else {
         Modal.error({
           title: '错误',

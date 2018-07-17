@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'dva';
 import { Upload, Icon, message, Input, Form, Button } from 'antd';
-
+import { API_LOCATION } from '../../../../constants'
 import styles from './Banner.css';
 
 const FormItem = Form.Item;
@@ -89,7 +89,7 @@ class FormUpload extends React.Component {
               listType="picture-card"
               className="avatar-uploader"
               showUploadList={false}
-              action="http://localhost:3000/api/upload"
+              action={`${API_LOCATION}/api/upload`}
               beforeUpload={beforeUpload}
               onChange={this.handleChange}
             >
