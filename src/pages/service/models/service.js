@@ -14,8 +14,8 @@ export default {
     },
   },
   effects: {
-    *fetch({ payload: { page = 1 } }, { call, put }) {
-      const { code, list, total, msg } = yield call(serviceService.fetch, { page });
+    *fetch({ payload: { page = 1, limit = 10 } }, { call, put }) {
+      const { code, list, total, msg } = yield call(serviceService.fetch, { page, limit });
       if (code === 200) {
         yield put({
           type: 'save',

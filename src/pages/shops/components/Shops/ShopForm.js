@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   Form, Select, InputNumber, Switch, Input,
-  Button, Upload, Icon,
+  Button
 } from 'antd';
 
 const FormItem = Form.Item;
@@ -19,10 +19,17 @@ class FormList extends React.Component {
   }
 
   handleSubmit = (e) => {
+    const { dispatch, id } = this.props
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        console.log('Received values of form: ', values);
+        dispatch({
+          type: 'shops/update',
+          payload: {
+            id,
+            values
+          }
+        });
       }
     });
   }
@@ -37,14 +44,15 @@ class FormList extends React.Component {
 
   render() {
     const { getFieldDecorator } = this.props.form;
-    // console.log(this.props.info)
     const {
       is_open,
       name,
       location,
       longitude,
       latitude,
-      description
+      description,
+      service,
+      set_number
     } = this.props.info
     const formItemLayout = {
       labelCol: { span: 6 },
@@ -78,7 +86,7 @@ class FormList extends React.Component {
         >
           {getFieldDecorator('location', {
             initialValue: location
-          })(<TextArea autosize={{ minRows: 2, maxRows: 6 }} />)}
+          })(<TextArea autosize={{ minRows: 5, maxRows: 10 }} />)}
         </FormItem>
         <FormItem
           {...formItemLayout}
@@ -105,37 +113,36 @@ class FormList extends React.Component {
         >
           {getFieldDecorator('description', {
             initialValue: description
-          })(<TextArea autosize={{ minRows: 2, maxRows: 6 }} />)}
+          })(<TextArea autosize={{ minRows: 5, maxRows: 10 }} />)}
         </FormItem>
       
         <FormItem
           {...formItemLayout}
           label="可用工位"
         >
-          {getFieldDecorator('input-number', { initialValue: 3 })(
+          {getFieldDecorator('set_number', { initialValue: set_number })(
             <InputNumber min={1} max={10} />
           )}
         </FormItem>
 
         <FormItem
           {...formItemLayout}
-          label="项目信息"
+          label="服务项目"
         >
-          {getFieldDecorator('select-multiple', {
+          {getFieldDecorator('service', {
+            initialValue: service ? service.split(',') : [],
             rules: [
-              { required: true, message: 'Please select your favourite colors!', type: 'array' },
+              { required: true, message: '请选择服务项目', type: 'array' },
             ],
           })(
-            <Select mode="multiple" placeholder="Please select favourite colors">
-              <Option value="red">Red</Option>
-              <Option value="green">Green</Option>
-              <Option value="blue">Blue</Option>
+            <Select mode="multiple" placeholder="请选择服务项目">
+              {this.props.serviceList.map(item => <Option key={item.id} value={`${item.id}`}>{item.name}</Option>)}
             </Select>
           )}
         </FormItem>
 
         
-        <FormItem
+        {/* <FormItem
           {...formItemLayout}
           label="Upload"
           extra="longgggggggggggggggggggggggggggggggggg"
@@ -170,7 +177,7 @@ class FormList extends React.Component {
               </Upload.Dragger>
             )}
           </div>
-        </FormItem>
+        </FormItem> */}
 
         <FormItem
           wrapperCol={{ span: 12, offset: 6 }}

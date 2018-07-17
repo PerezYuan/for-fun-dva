@@ -1,8 +1,8 @@
 import request from '../../../utils/request';
 import { seralizeQuery } from '../../../utils/URL';
 
-export function fetch({ page }) {
-  return request(`/api/service/list?page=${page}&limit=10`);
+export function fetch({ page, limit }) {
+  return request(`/api/service/list?page=${page}&limit=${limit}`);
 }
 
 export function remove(id) {

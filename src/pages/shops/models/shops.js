@@ -1,11 +1,10 @@
 import * as shopsService from '../services/shops';
+import { Modal, message } from 'antd'
 
 export default {
   namespace: 'shops',
   state: {
-    list: [],
-    total: null,
-    page: null,
+    list: []
   },
   reducers: {
     save(state, { payload: { list } }) {
@@ -14,19 +13,25 @@ export default {
   },
   effects: {
     *list(action, { call, put }) {
-      const { list } = yield call(shopsService.list);
-      console.log(list)
-      yield put({
-        type: 'save',
-        payload: {
-          list,
-        },
-      });
+      const { list, code, msg } = yield call(shopsService.list);
+      if (code === 200) {
+        yield put({
+          type: 'save',
+          payload: {
+            list
+          },
+        });
+      } else {
+        Modal.error({
+          title: '错误',
+          content: msg,
+        });
+      }
     },
     *get({ payload: id }, { select, call, put }) {
       const list = yield select(state => state.shops.list);
       const { data } = yield call(shopsService.get, id);
-      list[id - 1].info = data
+      list.filter(item => item.id === id)[0].info = data
       yield put({
         type: 'save',
         payload: {
@@ -34,27 +39,40 @@ export default {
         },
       });
     },
-    *remove({ payload: id }, { call, put }) {
-      yield call(shopsService.remove, id);
-      yield put({ type: 'reload' });
-    },
-    *patch({ payload: { id, values } }, { call, put }) {
-      yield call(shopsService.patch, id, values);
-      yield put({ type: 'reload' });
-    },
     *create({ payload: values }, { call, put }) {
-      yield call(shopsService.create, values);
-      yield put({ type: 'reload' });
+      const { code, msg } = yield call(shopsService.create);
+      if (code === 200) {
+        message.success('操作成功')
+        yield put({ type: 'reload' });
+      } else {
+        Modal.error({
+          title: '错误',
+          content: msg,
+        });
+      }
+    },
+    *update({ payload: { id, values } }, { call, put }) {
+      const { code, msg } = yield call(shopsService.update, id, values);
+      if (code === 200) {
+        message.success('操作成功')
+        yield put({ type: 'reload' });
+        yield put({ type: 'get', payload: id });
+      } else {
+        Modal.error({
+          title: '错误',
+          content: msg,
+        });
+      }
     },
     *reload(action, { put, select }) {
-      const page = yield select(state => state.users.page);
-      yield put({ type: 'fetch', payload: { page } });
+      yield put({ type: 'list' });
     },
   },
   subscriptions: {
     setup({ dispatch, history }) {
       return history.listen(({ pathname, query }) => {
         if (pathname === '/shops') {
+          dispatch({ type: 'service/fetch', payload: { page: 1, limit: 100} });
           dispatch({ type: 'list' });
         }
       });

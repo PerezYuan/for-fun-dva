@@ -19,6 +19,7 @@ class UserEditModal extends Component {
   };
 
   hideModelHandler = () => {
+    this.props.form.resetFields()
     this.setState({
       visible: false,
     });

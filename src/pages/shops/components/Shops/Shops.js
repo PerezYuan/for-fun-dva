@@ -1,42 +1,50 @@
 import React from 'react';
 import { connect } from 'dva';
-import { Button, Tabs } from 'antd';
+import { Button, Tabs, Modal } from 'antd';
 import ShopForm from './ShopForm'
 
 const TabPane = Tabs.TabPane
 
 class Shops extends React.Component {
-  constructor(props) {
-    super(props);
-    this.newTabIndex = 0;
-    const panes = [
-      { title: 'Tab 1', content: 'Content of Tab Pane 1', key: '1' },
-      { title: 'Tab 2', content: 'Content of Tab Pane 2', key: '2' },
-    ];
-    this.state = {
-      activeKey: panes[0].key,
-      panes,
-    };
+  callback = (key) => {
+    const { dispatch } = this.props
+    // dispatch({
+    //   type: 'shops/get',
+    //   payload: parseInt(key, 10),
+    // });
   }
 
-  callback = (key) => {
-    console.log(key)
+  add() {
+    const { dispatch } = this.props
+    Modal.confirm({
+      title: '请确认',
+      content: '确认新增门店？',
+      onOk() {
+        dispatch({
+          type: 'shops/create'
+        })
+      },
+      onCancel() {
+        
+      },
+    });
   }
 
   render() {
-    let { list } = this.props
+    let { list, serviceList, dispatch } = this.props
     if (!list) { list = [] } 
     return (
       <div>
         <div style={{ marginBottom: 16 }}>
-          <Button onClick={this.add}>ADD</Button>
+          <Button onClick={this.add.bind(this)}>新增门店</Button>
         </div>
         <Tabs onChange={this.callback} type="card">
           {list.map(item => <TabPane tab={item.name} key={item.id}>
             <ShopForm
               id={item.id}
               info={item.info || {}}
-              dispatch={this.props.dispatch}
+              serviceList={serviceList}
+              dispatch={dispatch}
             />
           </TabPane>)}
         </Tabs>
@@ -47,9 +55,11 @@ class Shops extends React.Component {
 
 function mapStateToProps(state) {
   const { list } = state.shops;
+  const serviceList = state.service.list;
   return {
     loading: state.loading.models.shops,
-    list
+    list,
+    serviceList
   };
 }
 

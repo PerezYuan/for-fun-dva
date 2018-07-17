@@ -7,7 +7,7 @@ import { PAGE_SIZE } from '../../../../constants';
 import UserModal from './UserModal';
 
 function Users(data) {
-  const { dispatch, list: dataSource, loading, total, page: current, shoplist } = data
+  const { dispatch, list: dataSource, loading, total, page: current, shoplist, titlelist } = data
   function deleteHandler(id) {
     dispatch({
       type: 'users/remove',
@@ -26,7 +26,7 @@ function Users(data) {
 
   function editHandler(id, values) {
     dispatch({
-      type: 'users/patch',
+      type: 'users/edit',
       payload: { id, values },
     });
   }
@@ -35,12 +35,6 @@ function Users(data) {
     dispatch({
       type: 'users/create',
       payload: values,
-    });
-  }
-
-  function getShopList() {
-    dispatch({
-      type: 'shoplist/fetch'
     });
   }
 
@@ -68,14 +62,26 @@ function Users(data) {
       key: 'create_time',
     },
     {
+      title: '离职时间',
+      dataIndex: 'exit_time',
+      key: 'exit_time',
+    },
+    {
+      title: '手机号码',
+      dataIndex: 'phone_number',
+      key: 'phone_number',
+    },
+    {
       title: '所属门店',
       dataIndex: 'shop',
       key: 'shop',
+      render: id => shoplist.filter(item => item.id === id)[0].name
     },
     {
       title: '岗位',
       dataIndex: 'title',
       key: 'title',
+      render: id => titlelist.filter(item => item.id === id)[0].name
     },
     {
       title: '微信号',
@@ -88,24 +94,26 @@ function Users(data) {
       key: 'info',
     },
     {
-      title: 'Operation',
+      title: '操作',
       key: 'operation',
       render: (text, record) => (
         <span className={styles.operation}>
           <UserModal
             record={record}
             onOk={editHandler.bind(null, record.id)}
-            getShopList={getShopList}
             shoplist={shoplist}
+            titlelist={titlelist}
           >
             <a>编辑</a>
           </UserModal>
-          <Popconfirm
-            title="Confirm to delete?"
+          {parseInt(record.is_out, 10) === 1 ? null : <Popconfirm
+            title="确定该人员离职？"
+            okText="取消"
+            cancelText="确定"
             onConfirm={deleteHandler.bind(null, record.id)}
           >
-            <a href="">Delete</a>
-          </Popconfirm>
+            <a href="">离职</a>
+          </Popconfirm>}
         </span>
       ),
     },
@@ -118,10 +126,10 @@ function Users(data) {
           <UserModal
             record={{}}
             onOk={createHandler}
-            getShopList={getShopList}
             shoplist={shoplist}
+            titlelist={titlelist}
           >
-            <Button type="primary">Create User</Button>
+            <Button type="primary">新增发型师</Button>
           </UserModal>
         </div>
         <Table
@@ -145,11 +153,12 @@ function Users(data) {
 
 function mapStateToProps(state) {
   const { list, total, page } = state.users;
-  const { shoplist } = state.shoplist
+  const { shoplist, titlelist } = state.userResourcelist;
   return {
     loading: state.loading.models.users,
     list,
     shoplist,
+    titlelist,
     total,
     page,
   };

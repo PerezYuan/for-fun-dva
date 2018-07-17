@@ -1,26 +1,38 @@
 import request from '../../../utils/request';
 import { PAGE_SIZE } from '../../../constants';
+import { seralizeQuery } from '../../../utils/URL';
 
 export function fetch({ page }) {
   return request(`/api/employee/list?page=${page}&limit=${PAGE_SIZE}`);
 }
 
 export function remove(id) {
-  return request(`/api/users/${id}`, {
-    method: 'DELETE',
+  return request(`/api/employee/out`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
+    },
+    body: `id=${id}`
   });
 }
 
-export function patch(id, values) {
-  return request(`/api/users/${id}`, {
-    method: 'PATCH',
-    body: JSON.stringify(values),
+export function edit(id, values) {
+  return request(`/api/employee/modify`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
+    },
+    body: `id=${id}&${seralizeQuery(values)}`,
   });
 }
 
 export function create(values) {
-  return request('/api/users', {
+  console.log(values)
+  return request(`/api/employee/insert`, {
     method: 'POST',
-    body: JSON.stringify(values),
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
+    },
+    body: seralizeQuery(values),
   });
 }
